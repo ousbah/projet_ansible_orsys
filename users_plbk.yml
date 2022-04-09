@@ -1,0 +1,32 @@
+- name: "Users creation playbook"
+  hosts:
+    - test
+    - projet
+  become: yes
+  vars_files:
+    - vars/users.yml
+    - vars/passwords.yml
+  tasks:
+    - name: "Creating 'projet' group"
+      group: 
+        name: dev
+      when: ('projet' in group_names)
+    - name: "Creating 'test' group"
+      group:
+        name: test
+      when: ('test' in group_names)
+    - name: "Creating users of type dev in 'projet' group hosts"
+      user: 
+        name: "{{ item.nom }}"
+        groups: dev
+        password: "{{ pwd_dev | password_hash('sha512') }}"
+      when: ('projet' in group_names) and (item.type == "dev")
+      loop: "{{ utilisateurs }}"
+    - name: "Creating users of type test in 'test' group hosts"
+      user:
+        name: "{{ item.nom }}"
+        groups: test
+        password: "{{ pwd_test | password_hash('sha512') }}"
+      when: ('test' in group_names) and (item.type == "test")
+      loop: "{{ utilisateurs}}"
+

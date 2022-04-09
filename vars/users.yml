@@ -1,0 +1,9 @@
+utilisateurs:
+  - nom: jean
+    type: dev
+  - nom: philippe
+    type: dev
+  - nom: christian
+    type: test
+  - nom: nicolas
+    type: test
