@@ -15,14 +15,14 @@
       group:
         name: test
       when: ('test' in group_names)
-    - name: "Creating users of type dev in 'projet' group hosts"
+    - name: "Creating users of type dev in hosts 'projet' group"
       user: 
         name: "{{ item.nom }}"
         groups: dev
         password: "{{ pwd_dev | password_hash('sha512') }}"
       when: ('projet' in group_names) and (item.type == "dev")
       loop: "{{ utilisateurs }}"
-    - name: "Creating users of type test in 'test' group hosts"
+    - name: "Creating users of type test in hosts 'test' group"
       user:
         name: "{{ item.nom }}"
         groups: test
