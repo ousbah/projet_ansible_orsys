@@ -1,0 +1,47 @@
+- name: "Install httpd & apache2 for 'projet' and 'test' groups - customize welcome page"
+  hosts: all
+  tasks:
+    - name: "'projet' group - Install httpd - Customize welcome page"
+      block:
+        - name: "Install httpd"
+          yum:
+            name: httpd
+            state: latest
+          notify: restart_httpd
+
+        - name: "Customize welcome page"
+          template:
+            src: /home/ansible/projet/templates/motd_bb.j2
+            dest: /etc/motd
+            owner: root
+            group: root
+            mode: 0655
+      when: "'projet' in group_names"
+
+    - name: "'test' group - Install apache2 - Customize welcome page"
+      block:
+        - name: "Install apach2"
+          apt:
+            name: apache2
+            state: latest
+          notify: restart_apache2
+
+        - name: "Customize welcome page"
+          template:
+            src: /home/ansible/projet/templates/motd_bb.j2
+            dest: /etc/motd
+            owner: root
+            group: root
+            mode: 0655
+      when: "'test' in group_names"
+
+  handlers:
+    - name: restart_httpd
+      service: 
+        name: httpd
+        state: restarted
+
+    - name: restart_apache2
+      service: 
+        name: apache2
+        state: restarted
